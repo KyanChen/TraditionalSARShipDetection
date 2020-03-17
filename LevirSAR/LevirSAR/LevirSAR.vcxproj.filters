@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="SeaLandSeg\clipper.cpp" />
+    <ClCompile Include="CoarseDetection.cpp" />
+    <ClCompile Include="FineDetection.cpp" />
+    <ClCompile Include="LevirSAR.cpp" />
+    <ClCompile Include="SeaLandSeg.cpp" />
+    <ClCompile Include="GetROIs.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="SeaLandSeg\clipper.hpp" />
+    <ClInclude Include="CoarseDetection.h" />
+    <ClInclude Include="FineDetection.h" />
+    <ClInclude Include="LevirSAR.h" />
+    <ClInclude Include="SeaLandSeg.h" />
+    <ClInclude Include="GetROIs.h" />
+  </ItemGroup>
+</Project>
