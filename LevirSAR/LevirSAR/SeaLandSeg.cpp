@@ -1,7 +1,9 @@
 #include "SeaLandSeg.h"
 
-SeaLandSeg::SeaLandSeg(const char *loadpath)
+SeaLandSeg::SeaLandSeg(const char* loadpath)
 {
+	precision = 10000;
+	erode_size = 4;
 	load_shorelines(loadpath);
 }
 
@@ -9,11 +11,11 @@ SeaLandSeg::~SeaLandSeg()
 {
 }
 
-Mat SeaLandSeg::get_mask(double image_geo[6], int image_height, int image_width, int mask_height, int mask_width)
+Mat SeaLandSeg::get_mask(double corner[4][2], int mask_height, int mask_width)
 {
 	Paths clip(1), solution;
 
-	double corner[4][2];
+	/*double corner[4][2];
 	corner[0][0] = image_geo[0];
 	corner[0][1] = image_geo[3];
 	corner[1][0] = image_geo[0] + image_width * image_geo[1];
@@ -21,16 +23,16 @@ Mat SeaLandSeg::get_mask(double image_geo[6], int image_height, int image_width,
 	corner[2][0] = image_geo[0] + image_width * image_geo[1] + image_height * image_geo[2];
 	corner[2][1] = image_geo[3] + image_width * image_geo[4] + image_height * image_geo[5];
 	corner[3][0] = image_geo[0] + image_height * image_geo[2];
-	corner[3][1] = image_geo[3] + image_height * image_geo[5];
+	corner[3][1] = image_geo[3] + image_height * image_geo[5];*/
 
 	IntPoint pti;
-	pti.X = corner[0][0] * 10000; pti.Y = corner[0][1] * 10000;
+	pti.X = corner[0][0] * precision; pti.Y = corner[0][1] * precision;
 	clip[0].push_back(pti);
-	pti.X = corner[1][0] * 10000; pti.Y = corner[1][1] * 10000;
+	pti.X = corner[1][0] * precision; pti.Y = corner[1][1] * precision;
 	clip[0].push_back(pti);
-	pti.X = corner[2][0] * 10000; pti.Y = corner[2][1] * 10000;
+	pti.X = corner[2][0] * precision; pti.Y = corner[2][1] * precision;
 	clip[0].push_back(pti);
-	pti.X = corner[3][0] * 10000; pti.Y = corner[3][1] * 10000;
+	pti.X = corner[3][0] * precision; pti.Y = corner[3][1] * precision;
 	clip[0].push_back(pti);
 
 	Clipper c;
@@ -38,47 +40,42 @@ Mat SeaLandSeg::get_mask(double image_geo[6], int image_height, int image_width,
 	c.AddPaths(clip, ptClip, true);
 	c.Execute(ctIntersection, solution, pftNonZero, pftNonZero);
 
-	Mat mask;
+	Mat mask = draw_mask(solution, corner, mask_height, mask_width);
+	erode(mask, mask, getStructuringElement(MORPH_RECT, Size(erode_size, erode_size)));
 
 	return mask;
 }
 
-void SeaLandSeg::load_shorelines(const char *loadpath)
+void SeaLandSeg::load_shorelines(const char* loadpath)
 {
-	errno_t err;
-	FILE* fp;
-	// Open for read (will fail if file does not exist)
-	err = fopen_s(&fp, loadpath, "rb");
-	if (err != 0) {
-		// 打开失败
-		return;
-	}
+	/*
+	FILE* fp = fopen(loadpath, "rb");
 
 	IntPoint pti;
 	Path curPolyLine;
 	int poly_num;
 	int point_num;
-	float lat, lon;
+	float lon, lat;
 	fread(&poly_num, sizeof(int), 1, fp);
 	for (int i = 0; i < poly_num; i++)
 	{
 		fread(&point_num, sizeof(int), 1, fp);
 		for (int j = 0; j < point_num; j++)
 		{
-			fread(&lat, sizeof(float), 1, fp);
 			fread(&lon, sizeof(float), 1, fp);
-
-			pti.X = lon * 10000; pti.Y = lat * 10000;
+			fread(&lat, sizeof(float), 1, fp);
+			pti.X = lon * precision; pti.Y = lat * precision;
 			curPolyLine.push_back(pti);
 		}
 		shorelines.push_back(curPolyLine);
 		curPolyLine.clear();
 	}
-	
+
 	fclose(fp);
+	*/
 }
 
-Mat SeaLandSeg::draw_mask(Paths & solution, double corner[4][2], int mask_height, int mask_width)
+Mat SeaLandSeg::draw_mask(Paths& solution, double corner[4][2], int mask_height, int mask_width)
 {
 	Mat mask(mask_height, mask_width, CV_8UC1);
 	mask.setTo(0);
@@ -100,7 +97,7 @@ Mat SeaLandSeg::draw_mask(Paths & solution, double corner[4][2], int mask_height
 	int x, y;
 	int polynum = solution.size();
 	Point** pts;
-	pts = new Point*[polynum];
+	pts = new Point * [polynum];
 	int* nPts = new int[polynum];
 	for (int i = 0; i < polynum; i++)
 	{
@@ -108,11 +105,11 @@ Mat SeaLandSeg::draw_mask(Paths & solution, double corner[4][2], int mask_height
 		pts[i] = new Point[nPts[i]];
 		for (int j = 0; j < nPts[i]; j++)
 		{
-			trueLon = (double)solution[i][j].X / 10000;
-			trueLat = (double)solution[i][j].Y / 10000;
+			trueLon = (double)solution[i][j].X / precision;
+			trueLat = (double)solution[i][j].Y / precision;
 
-			x = M.at<double>(0, 0)*trueLon + M.at<double>(0, 1)*trueLat + M.at<double>(0, 2);
-			y = M.at<double>(1, 0)*trueLon + M.at<double>(1, 1)*trueLat + M.at<double>(1, 2);
+			x = M.at<double>(0, 0) * trueLon + M.at<double>(0, 1) * trueLat + M.at<double>(0, 2);
+			y = M.at<double>(1, 0) * trueLon + M.at<double>(1, 1) * trueLat + M.at<double>(1, 2);
 
 			pts[i][j] = Point(x, y);
 		}
@@ -123,7 +120,7 @@ Mat SeaLandSeg::draw_mask(Paths & solution, double corner[4][2], int mask_height
 	// 释放内存
 	delete[] nPts;
 
-	for (int i = 0; i<polynum; i++)
+	for (int i = 0; i < polynum; i++)
 		delete[] pts[i];
 
 	delete[] pts;

@@ -124,16 +124,18 @@
   <ItemGroup>
     <ClCompile Include="CoarseDetection.cpp" />
     <ClCompile Include="FineDetection.cpp" />
-    <ClCompile Include="GetROIs.cpp" />
+    <ClCompile Include="GetFeatures.cpp" />
     <ClCompile Include="LevirSAR.cpp" />
+    <ClCompile Include="RawImage.cpp" />
     <ClCompile Include="SeaLandSeg.cpp" />
     <ClCompile Include="SeaLandSeg\clipper.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CoarseDetection.h" />
     <ClInclude Include="FineDetection.h" />
-    <ClInclude Include="GetROIs.h" />
+    <ClInclude Include="GetFeatures.h" />
     <ClInclude Include="LevirSAR.h" />
+    <ClInclude Include="RawImage.h" />
     <ClInclude Include="SeaLandSeg.h" />
     <ClInclude Include="SeaLandSeg\clipper.hpp" />
   </ItemGroup>

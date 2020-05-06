@@ -1,19 +1,15 @@
 #ifndef LEVIRSAR_H
 #define LEVIRSAR_H
 
+#include <fstream>
+#include <sstream>
 #include <vector>
+#include <math.h>
 #include <opencv2/opencv.hpp>
 
 using namespace std;
 using namespace cv;
 
-
-
-//#define DEBUG
-#define GET_DATA
-
-#ifdef GET_DATA
-int getProposal(string filename);
-#endif
+#define TIME_DEBUG
 
 #endif

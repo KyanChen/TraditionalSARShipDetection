@@ -3,25 +3,18 @@
 class FineDetection
 {
 private:
-    HOGDescriptor *m_hog;
-	double *m_w;
-#ifndef GET_DATA
+    HOGDescriptor* m_hog;
+    double* m_w;
+
     float get_hog_score(Mat& img);
-#endif // !GET_DATA
-	
-#ifdef GET_DATA
-    void FineDetection::writeTxt(string name, vector<float> bboxes, vector<float> descriptors);
-    vector<float> FineDetection::get_hog_score(Mat& img);
-#endif // GET_DATA
+    int get_weights(string filename, double* weights);
 
 public:
-    FineDetection();
+    FineDetection(string filename);
     ~FineDetection();
 
-    void run(Mat &img, vector<Rect> &targets, vector<Rect> &final_targets);
-#ifdef GET_DATA
-    void run(string filename, Mat& img, vector<Rect>& targets, vector<Rect>& final_targets);
-#endif // GET_DATA
+    void run(Mat& img, vector<Rect>& targets, vector<Rect>& final_targets);
 
-    int FineDetection::get_weights(string name, double* weights);
+
+    void get_features(string filename, Mat& img, vector<Rect>& targets, vector<Rect>& final_targets);
 };

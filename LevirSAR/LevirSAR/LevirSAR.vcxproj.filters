@@ -6,7 +6,8 @@
     <ClCompile Include="FineDetection.cpp" />
     <ClCompile Include="LevirSAR.cpp" />
     <ClCompile Include="SeaLandSeg.cpp" />
-    <ClCompile Include="GetROIs.cpp" />
+    <ClCompile Include="RawImage.cpp" />
+    <ClCompile Include="GetFeatures.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SeaLandSeg\clipper.hpp" />
@@ -14,6 +15,7 @@
     <ClInclude Include="FineDetection.h" />
     <ClInclude Include="LevirSAR.h" />
     <ClInclude Include="SeaLandSeg.h" />
-    <ClInclude Include="GetROIs.h" />
+    <ClInclude Include="RawImage.h" />
+    <ClInclude Include="GetFeatures.h" />
   </ItemGroup>
 </Project>
